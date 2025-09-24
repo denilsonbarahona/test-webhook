@@ -47,14 +47,18 @@ app.post("/", async (req, res) => {
     stateModifier: prompt,
   });
 
-  const message = req.body.entry[0].changes[0].value.messages[0].text.body;
+  const message =
+    req?.body?.entry?.[0]?.changes?.[0]?.value?.messages?.[0]?.text?.body ||
+    "Hola, como estas?";
 
   const response = await agent.invoke({
     messages: [{ role: "user", content: message }],
   });
 
   // usar el mismo número que envió el mensaje (wa_id del webhook)
-  const waId = req.body.entry[0].changes[0].value.contacts[0].wa_id;
+  const waId =
+    req.body?.entry?.[0]?.changes?.[0]?.value?.contacts?.[0]?.wa_id ||
+    process.env.TEL;
 
   const url = `https://graph.facebook.com/v22.0/783616344834680/messages`;
 
@@ -65,7 +69,9 @@ app.post("/", async (req, res) => {
     to: waId, // <-- mismo número que envió
     type: "text",
     text: {
-      body: response.messages?.[response.messages.length - 1]?.content,
+      body:
+        response?.messages?.[response?.messages?.length - 1]?.content ||
+        "error de la IA",
     },
   };
 

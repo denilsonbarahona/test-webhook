@@ -60,7 +60,7 @@ app.post("/", async (req, res) => {
     req.body?.entry?.[0]?.changes?.[0]?.value?.contacts?.[0]?.wa_id ||
     process.env.TEL;
 
-  const url = `https://graph.facebook.com/v22.0/783616344834680/messages`;
+  const url = `https://graph.facebook.com/v23.0/783616344834680/messages`;
 
   // *** Payload EXACTO que pediste, con 'to' dinámico ***
   const data = {
@@ -82,6 +82,8 @@ app.post("/", async (req, res) => {
       "Content-Type": "application/json",
       Authorization: `Bearer ${process.env.WHATSAPP_TOKEN}`, // <-- ENV
     },
+    timeout: 10000, // timeout en ms
+    validateStatus: () => true, // acepta cualquier status code
   });
 
   console.log(whsResponse, "whsResponse");
